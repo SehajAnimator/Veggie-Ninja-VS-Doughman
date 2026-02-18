@@ -1,0 +1,17 @@
+BOSSES:
+
+- Jellyman
+- Fish
+- The Mighty Doughman
+
+
+WEAPONS:
+
+- Kukri Knife
+- Tweezers
+- Spoon
+- Rolling Pin
+- Frisbee Plate
+- Tawa
+- Flame Thrower
+- Water Gun
