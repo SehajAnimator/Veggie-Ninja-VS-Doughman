@@ -7,10 +7,10 @@ BOSSES:
 
 WEAPONS:
 
-- Kukri Knife
+- Kukri Knife [✅]
 - Tweezers
-- Spoon
-- Rolling Pin
+- Spoon [✅]
+- Rolling Pin [✅]
 - Frisbee Plate
 - Tawa
 - Flame Thrower
