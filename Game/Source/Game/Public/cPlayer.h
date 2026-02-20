@@ -20,8 +20,17 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Custom variables
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
-	class UCameraComponent* defCamera;
+	// Root
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	class UCapsuleComponent* Capsule;
+
+	// Spring Arm
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	class USpringArmComponent* SpringArm;
+
+	// Camera
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	class UCameraComponent* Camera;
 
 public:	
 	// Called every frame

@@ -2,7 +2,9 @@
 
 
 #include "cPlayer.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Engine/Engine.h"
 
 // Sets default values
@@ -12,14 +14,23 @@ AcPlayer::AcPlayer()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Constructor Manual Gen
-		// Root component
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-		// Camera
-	defCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("DefaultCamera"));
-	defCamera->SetupAttachment(RootComponent);
-	defCamera->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
+		// Root Capsule
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	Capsule->InitCapsuleSize(42.f, 96.0f);
+	RootComponent = Capsule;
 
-	GAreScreenMessagesEnabled = true;
+		// Spring Arm
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->TargetArmLength = 300.0f;
+	SpringArm->bUsePawnControlRotation = true;
+
+		// Camera
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(SpringArm);
+	Camera->bUsePawnControlRotation = false;
+
+
 }
 
 // Called when the game starts or when spawned
