@@ -5,8 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
-#include "GameFramework/PlayerInput.h"
+#include "Components/StaticMeshComponent.h"
 #include "cPlayer.generated.h"
+
+class PlayerAttributes
+{
+public:
+	float moveSpeed = 10.f;
+};
 
 UCLASS()
 class GAME_API AcPlayer : public APawn
@@ -20,8 +26,11 @@ public:
 private:
 	float cameraSensitivity = 3.f;
 	float mouseX = 0, mouseY = 0;
+	PlayerAttributes playerAttributes;
 	APlayerController* playerController;
-	FInputKeyParams forwardParam;
+	
+	bool goForward = false, goBackward = false, goRight = false, goLeft = false;
+	bool canJump = false, isJumping = false;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -36,12 +45,15 @@ public:
 	
 	// Custom Component
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
+	UStaticMeshComponent* playerBase;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
 	UCameraComponent* playerCamera;
 	
 	// Custom Methods
 	void UpdateCamera();
-	void SetupKeybinds();
 	void CheckMovement();
+	void UpdateMovement();
 	// Setters
 	void SetSensitivity(float value);
 	// Getters
