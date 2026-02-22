@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/PlayerInput.h"
 #include "cPlayer.generated.h"
 
 UCLASS()
@@ -19,6 +20,8 @@ public:
 private:
 	float cameraSensitivity = 3.f;
 	float mouseX = 0, mouseY = 0;
+	APlayerController* playerController;
+	FInputKeyParams forwardParam;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -37,6 +40,8 @@ public:
 	
 	// Custom Methods
 	void UpdateCamera();
+	void SetupKeybinds();
+	void CheckMovement();
 	// Setters
 	void SetSensitivity(float value);
 	// Getters

@@ -26,8 +26,13 @@ void AcPlayer::BeginPlay()
 	Super::BeginPlay();
 	
 	// Init Code
+	playerController = GetWorld()->GetFirstPlayerController();
+	// Player Camera
 	playerCamera->Activate(true);
 	playerCamera->SetRelativeLocation(FVector(0.0f, 0.0f, 150.f));
+	
+	// Closing Setup
+	this->SetupKeybinds();
 }
 
 // Called every frame
@@ -38,13 +43,13 @@ void AcPlayer::Tick(float DeltaTime)
 	// Update Code
 	GetWorld()->GetFirstPlayerController()->GetInputMouseDelta(mouseX, mouseY);
 	this->UpdateCamera();
+	this->CheckMovement();
 }
 
 // Called to bind functionality to input
 void AcPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 // Custom Methods
@@ -53,6 +58,29 @@ void AcPlayer::UpdateCamera()
 	FRotator camRot = playerCamera->GetRelativeRotation();
 	camRot.Add(mouseY * this->GetSensitivity(), mouseX * this->GetSensitivity(), 0);
 	playerCamera->SetRelativeRotation(camRot);
+}
+
+void AcPlayer::SetupKeybinds()
+{
+	forwardParam.Key = FKey("W");
+	forwardParam.Event = IE_Pressed;
+	forwardParam.bIsGamepadOverride = false;
+}
+
+void AcPlayer::CheckMovement()
+{
+	if (playerController->InputKey(forwardParam))
+	{
+		if (GEngine != nullptr)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				0.1f,
+				FColor::Red,
+				TEXT("PRESSED W")
+			);
+		}
+	}
 }
 
 // Setters
