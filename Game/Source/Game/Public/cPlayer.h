@@ -10,23 +10,25 @@ UCLASS()
 class GAME_API AcPlayer : public APawn
 {
 	GENERATED_BODY()
-
-public:
-	// Sets default values for this pawn's properties
-	AcPlayer();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
+	// Sets default values for this pawn's properties
+	AcPlayer();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// Custom Variables
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Default")
 	USceneComponent* RootScene;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Default")
+	USphereComponent* resSphere;
 
 };
