@@ -14,8 +14,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "cPlayer.h"
 #include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Actor.h"
 #include "BaseWeapon.generated.h"
 
@@ -34,10 +35,7 @@ public:
 	// Sets default values for this actor's properties
 	ABaseWeapon();
 	
-	ABaseWeapon& setPlayer(AcPlayer* player);
-	
 private:
-	AcPlayer* cPlayer;
 	WeaponAttributes attributes;
 
 protected:
@@ -49,9 +47,18 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
 	UBoxComponent* attackFrame;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
+	UStaticMeshComponent* cPlayerBase;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
+	UCameraComponent* cPlayerCamera;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	ABaseWeapon& SetBase(UStaticMeshComponent* base);
+	ABaseWeapon& SetView(UCameraComponent* camera);
 
 };

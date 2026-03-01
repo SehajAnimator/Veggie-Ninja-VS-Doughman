@@ -18,4 +18,22 @@ AKukriKnife::AKukriKnife()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	baseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset (TEXT("/Game/res/Weapons/KukriKnife/StaticMeshes/KukriKnife.KukriKnife"));
+	if (MeshAsset.Succeeded()) baseMesh->SetStaticMesh(MeshAsset.Object);
+	
+	baseMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	baseMesh->SetRelativeScale3D(FVector(0.25, 0.25, 0.25));
+}
+
+void AKukriKnife::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (cPlayerCamera != nullptr) baseMesh->SetupAttachment(RootComponent);
+}
+
+void AKukriKnife::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }

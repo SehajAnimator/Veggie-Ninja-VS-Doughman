@@ -16,6 +16,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/Engine.h"
+#include "Weapons/KukriKnife.h"
 
 // Sets default values
 AcPlayer::AcPlayer()
@@ -29,16 +30,11 @@ AcPlayer::AcPlayer()
 	// Custom Components
 	playerBase = CreateDefaultSubobject<UStaticMeshComponent>("PlayerBase");
 	
-	baseWeapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
-	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Game/res/QuestionGun_Baked/StaticMeshes/QuestionGun.QuestionGun"));
-	if (MeshAsset.Succeeded())baseWeapon->SetStaticMesh(MeshAsset.Object);
-	
     playerBase->SetSimulatePhysics(true);
     playerBase->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     playerBase->SetCollisionProfileName(TEXT("PhysicsActor"));
 	playerBase->SetEnableGravity(true);
-	playerBase->SetMassOverrideInKg(NAME_None, 10.f);
+	playerBase->SetMassOverrideInKg(NAME_None, 100.f);
 	playerBase->SetLinearDamping(1);
 	playerBase->SetAngularDamping(1);
     playerBase->SetupAttachment(RootComponent);
@@ -66,10 +62,6 @@ AcPlayer::AcPlayer()
 	playerCamera->SetupAttachment(playerBase);
 	playerCamera->bAutoActivate = false;
 	playerCamera->SetRelativeLocation(FVector3d(0.0f, 0.0f, 300.f));
-	
-	baseWeapon->SetupAttachment(playerCamera);
-	baseWeapon->SetRelativeLocation(FVector3d(150.0f, 100.0f, -75.f));
-	baseWeapon->SetCollisionProfileName("NoCollision");
 }
 
 // Called when the game starts or when spawned
@@ -79,8 +71,13 @@ void AcPlayer::BeginPlay()
 	
 	// Init Code
 	playerController = GetWorld()->GetFirstPlayerController();
+	playerController->Possess(this);
 	// Player Camera
 	playerCamera->Activate(true);
+	// Weapon Init
+	if (GetWorld()) equippedWeapon = GetWorld()->SpawnActor<AKukriKnife>(AKukriKnife::StaticClass());
+	equippedWeapon->SetBase(playerBase).SetView(playerCamera);
+	equippedWeapon->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called every frame
@@ -117,7 +114,7 @@ void AcPlayer::UpdateCamera()
 	FRotator camRotPitch = camRot;
 	camRotPitch.Roll = 0;
 	camRotPitch.Yaw = 0;
-	camRotPitch.Pitch = FMath::Clamp(camRot.Pitch, -90, 90);
+	camRotPitch.Pitch = FMath::Clamp(camRotPitch.Pitch, -90, 90);
 	playerCamera->SetRelativeRotation(camRotPitch);
 }
 
@@ -129,13 +126,9 @@ void AcPlayer::CheckMovement()
 	goBackward = false;
 	
 	if (playerController->IsInputKeyDown(EKeys::W)) goForward = true;
-	if (playerController->IsInputKeyDown(EKeys::Up)) goForward = true;
 	if (playerController->IsInputKeyDown(EKeys::A)) goLeft = true;
-	if (playerController->IsInputKeyDown(EKeys::Left)) goLeft = true;
 	if (playerController->IsInputKeyDown(EKeys::S)) goBackward = true;
-	if (playerController->IsInputKeyDown(EKeys::Down)) goBackward = true;
 	if (playerController->IsInputKeyDown(EKeys::D)) goRight = true;
-	if (playerController->IsInputKeyDown(EKeys::Right)) goRight = true;
 	if (playerController->IsInputKeyDown(EKeys::SpaceBar) && isGrounded(bottomCollider)) canJump = true;
 }
 
@@ -152,11 +145,19 @@ void AcPlayer::UpdateMovement()
 		playerBase->SetPhysicsLinearVelocity(cVel);
 	}
 	
-	// Add Forces
+	// Add Movement
+	/*
 	if (goForward) playerBase->AddForce(playerBase->GetForwardVector() * this->playerAttributes.moveSpeed, NAME_None, true);
 	if (goLeft) playerBase->AddForce(playerBase->GetRightVector() * -this->playerAttributes.moveSpeed, NAME_None, true);
 	if (goBackward) playerBase->AddForce(playerBase->GetForwardVector() * -this->playerAttributes.moveSpeed, NAME_None, true);
 	if (goRight) playerBase->AddForce(playerBase->GetRightVector() * this->playerAttributes.moveSpeed, NAME_None, true);
+	*/
+	FVector playerVelocity = playerBase->GetPhysicsLinearVelocity();
+	if (goForward) playerVelocity += (playerBase->GetForwardVector() * this->playerAttributes.moveSpeed);
+	if (goLeft) playerVelocity += (playerBase->GetRightVector() * -this->playerAttributes.moveSpeed);
+	if (goBackward) playerVelocity += (playerBase->GetForwardVector() * -this->playerAttributes.moveSpeed);
+	if (goRight) playerVelocity += (playerBase->GetRightVector() * this->playerAttributes.moveSpeed);
+	playerBase->SetPhysicsLinearVelocity(playerVelocity);
 	
 	if (canJump) {
 		canJump = false;

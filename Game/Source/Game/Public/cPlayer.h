@@ -17,14 +17,15 @@
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "BaseWeapon.h"
 #include "cPlayer.generated.h"
 
 class PlayerAttributes
 {
 public:
-	float moveSpeed = 3000.f;
+	float moveSpeed = 100.f;
 	float jumpForce = 1000.f;
-	float maxMoveVelocity = 4500.f;
+	float maxMoveVelocity = 500.f;
 };
 
 class SkillAttributes
@@ -78,7 +79,7 @@ public:
 	UStaticMeshComponent* bottomCollider;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
-	UStaticMeshComponent* baseWeapon;
+	ABaseWeapon* equippedWeapon;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
 	UCameraComponent* playerCamera;
