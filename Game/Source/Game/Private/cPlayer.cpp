@@ -17,6 +17,7 @@
 #include "Camera/CameraComponent.h"
 #include "Engine/Engine.h"
 #include "Weapons/KukriKnife.h"
+#include "Components/ChildActorComponent.h"
 
 // Sets default values
 AcPlayer::AcPlayer()
@@ -61,7 +62,23 @@ AcPlayer::AcPlayer()
     playerCamera = CreateDefaultSubobject<UCameraComponent>("DefaultCamera");
 	playerCamera->SetupAttachment(playerBase);
 	playerCamera->bAutoActivate = false;
-	playerCamera->SetRelativeLocation(FVector3d(0.0f, 0.0f, 300.f));
+	playerCamera->SetRelativeLocation(FVector(0.0f, 0.0f, 300.f));
+	
+	equippedWeapon = CreateDefaultSubobject<UChildActorComponent>(TEXT("EquippedWeapon"));
+	equippedWeapon->AttachToComponent(playerCamera, FAttachmentTransformRules::KeepRelativeTransform);
+	equippedWeapon->SetChildActorClass(AKukriKnife::StaticClass());
+	
+	AKukriKnife* child = Cast<AKukriKnife>(equippedWeapon->GetChildActor());
+	if (child)
+	{
+		child->SetBase(playerBase).SetView(playerCamera);
+		if (GEngine) GEngine->AddOnScreenDebugMessage(
+			-1,
+			5.f,
+			FColor::Red,
+			TEXT("")
+		);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -74,10 +91,6 @@ void AcPlayer::BeginPlay()
 	playerController->Possess(this);
 	// Player Camera
 	playerCamera->Activate(true);
-	// Weapon Init
-	if (GetWorld()) equippedWeapon = GetWorld()->SpawnActor<AKukriKnife>(AKukriKnife::StaticClass());
-	equippedWeapon->SetBase(playerBase).SetView(playerCamera);
-	equippedWeapon->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called every frame
@@ -90,7 +103,6 @@ void AcPlayer::Tick(float DeltaTime)
 	this->UpdateCamera();
 	this->CheckMovement();
 	this->UpdateMovement();
-
 }
 
 // Called to bind functionality to input

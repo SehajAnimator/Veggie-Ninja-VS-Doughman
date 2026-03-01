@@ -23,14 +23,15 @@ AKukriKnife::AKukriKnife()
 	if (MeshAsset.Succeeded()) baseMesh->SetStaticMesh(MeshAsset.Object);
 	
 	baseMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	baseMesh->SetRelativeScale3D(FVector(0.25, 0.25, 0.25));
+	baseMesh->SetRelativeScale3D(FVector(0.2, 0.2, 0.2));
+	baseMesh->SetupAttachment(RootComponent);
+	
+	viewOffset = FVector(-50.0f, 0.0f, 0.0f);
 }
 
 void AKukriKnife::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (cPlayerCamera != nullptr) baseMesh->SetupAttachment(RootComponent);
 }
 
 void AKukriKnife::Tick(float DeltaTime)

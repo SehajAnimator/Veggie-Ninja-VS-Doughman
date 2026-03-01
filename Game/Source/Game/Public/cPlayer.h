@@ -17,7 +17,7 @@
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "BaseWeapon.h"
+#include "Components/ChildActorComponent.h"
 #include "cPlayer.generated.h"
 
 class PlayerAttributes
@@ -79,7 +79,7 @@ public:
 	UStaticMeshComponent* bottomCollider;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
-	ABaseWeapon* equippedWeapon;
+	UChildActorComponent* equippedWeapon;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
 	UCameraComponent* playerCamera;

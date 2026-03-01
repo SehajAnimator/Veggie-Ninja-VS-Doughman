@@ -30,6 +30,12 @@ void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (cPlayerCamera && baseMesh) {
+		RootComponent = cPlayerCamera;
+		
+		baseMesh->SetWorldLocation(cPlayerCamera->GetComponentLocation() + viewOffset);
+		baseMesh->SetWorldRotation(cPlayerCamera->GetComponentRotation());
+	}
 }
 
 // Called every frame

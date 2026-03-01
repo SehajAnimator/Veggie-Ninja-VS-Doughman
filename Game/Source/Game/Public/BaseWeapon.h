@@ -54,11 +54,11 @@ protected:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
 	UCameraComponent* cPlayerCamera;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
 	ABaseWeapon& SetBase(UStaticMeshComponent* base);
 	ABaseWeapon& SetView(UCameraComponent* camera);
-
+	FVector viewOffset = {};
 };
