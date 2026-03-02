@@ -45,7 +45,7 @@ void ABaseWeapon::Tick(float DeltaTime)
 
 }
 
-ABaseWeapon& ABaseWeapon::SetBase(UStaticMeshComponent* base)
+ABaseWeapon& ABaseWeapon::SetBase(UCapsuleComponent* base)
 {
 	this->cPlayerBase = base;
 	return *this;

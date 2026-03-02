@@ -29,7 +29,8 @@ AcPlayer::AcPlayer()
 	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
 	
 	// Custom Components
-	playerBase = CreateDefaultSubobject<UStaticMeshComponent>("PlayerBase");
+	playerBase = CreateDefaultSubobject<UCapsuleComponent>("PlayerBase");
+	playerBase->InitCapsuleSize(50, 100);
 	
     playerBase->SetSimulatePhysics(true);
     playerBase->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -39,7 +40,6 @@ AcPlayer::AcPlayer()
 	playerBase->SetLinearDamping(1);
 	playerBase->SetAngularDamping(1);
     playerBase->SetupAttachment(RootComponent);
-	playerBase->SetVisibility(false);
 	playerBase->BodyInstance.bLockXRotation = true;
 	playerBase->BodyInstance.bLockYRotation = true;
 	
@@ -48,14 +48,14 @@ AcPlayer::AcPlayer()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset (TEXT("/Engine/BasicShapes/Cube.Cube"));
 	if (CubeMeshAsset.Succeeded())
 	{
-		playerBase->SetStaticMesh(CubeMeshAsset.Object);
+		// playerBase->SetStaticMesh(CubeMeshAsset.Object);
 		bottomCollider->SetStaticMesh(CubeMeshAsset.Object);
 	}
 	
 	bottomCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	bottomCollider->SetCollisionProfileName(TEXT("NoCollision"));
 	bottomCollider->SetupAttachment(playerBase);
-	bottomCollider->SetVisibility(false);
+	bottomCollider->SetVisibility(true);
 	bottomCollider->SetRelativeLocation(FVector(0, 0, -46));
 	bottomCollider->SetRelativeScale3D(FVector(1, 1, 0.1f));
 
@@ -199,7 +199,7 @@ bool AcPlayer::isGrounded(USceneComponent* comp)
 	return hitResults.Num() > 0;
 }
 
-UStaticMeshComponent* AcPlayer::GetBase() const
+UCapsuleComponent* AcPlayer::GetBase() const
 {
 	return this->playerBase;
 }

@@ -26,7 +26,7 @@ AKukriKnife::AKukriKnife()
 	baseMesh->SetRelativeScale3D(FVector(0.2, 0.2, 0.2));
 	baseMesh->SetupAttachment(RootComponent);
 
-	viewOffset = FVector(100, 150, -25);
+	viewOffset = FVector(150, 50, -25);
 	rotOffset = FRotator(0, -90, 0);
 }
 

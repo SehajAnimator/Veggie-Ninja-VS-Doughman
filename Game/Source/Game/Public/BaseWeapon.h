@@ -17,6 +17,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Actor.h"
 #include "BaseWeapon.generated.h"
 
@@ -49,7 +50,7 @@ protected:
 	UBoxComponent* attackFrame;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
-	UStaticMeshComponent* cPlayerBase;
+	UCapsuleComponent* cPlayerBase;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
 	UCameraComponent* cPlayerCamera;
@@ -58,7 +59,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	ABaseWeapon& SetBase(UStaticMeshComponent* base);
+	ABaseWeapon& SetBase(UCapsuleComponent* base);
 	ABaseWeapon& SetView(UCameraComponent* camera);
 	
 	FVector viewOffset;

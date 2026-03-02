@@ -16,6 +16,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ChildActorComponent.h"
 #include "cPlayer.generated.h"
@@ -73,7 +74,7 @@ public:
 	
 	// Custom Component
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
-	UStaticMeshComponent* playerBase;
+	UCapsuleComponent* playerBase;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Default")
 	UStaticMeshComponent* bottomCollider;
@@ -93,5 +94,5 @@ public:
 	// Getters
 	float GetSensitivity() const;
 	bool isGrounded(USceneComponent* comp);
-	UStaticMeshComponent* GetBase() const;
+	UCapsuleComponent* GetBase() const;
 };
