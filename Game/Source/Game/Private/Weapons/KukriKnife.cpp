@@ -25,8 +25,9 @@ AKukriKnife::AKukriKnife()
 	baseMesh->SetCollisionProfileName(TEXT("NoCollision"));
 	baseMesh->SetRelativeScale3D(FVector(0.2, 0.2, 0.2));
 	baseMesh->SetupAttachment(RootComponent);
-	
-	viewOffset = FVector(-50.0f, 0.0f, 0.0f);
+
+	viewOffset = FVector(100, 150, -25);
+	rotOffset = FRotator(0, -90, 0);
 }
 
 void AKukriKnife::BeginPlay()

@@ -69,16 +69,7 @@ AcPlayer::AcPlayer()
 	equippedWeapon->SetChildActorClass(AKukriKnife::StaticClass());
 	
 	AKukriKnife* child = Cast<AKukriKnife>(equippedWeapon->GetChildActor());
-	if (child)
-	{
-		child->SetBase(playerBase).SetView(playerCamera);
-		if (GEngine) GEngine->AddOnScreenDebugMessage(
-			-1,
-			5.f,
-			FColor::Red,
-			TEXT("")
-		);
-	}
+	if (child) child->SetBase(playerBase).SetView(playerCamera);
 }
 
 // Called when the game starts or when spawned
@@ -91,6 +82,13 @@ void AcPlayer::BeginPlay()
 	playerController->Possess(this);
 	// Player Camera
 	playerCamera->Activate(true);
+	
+	AKukriKnife* child = Cast<AKukriKnife>(equippedWeapon->GetChildActor());
+	if (child)
+	{
+		equippedWeapon->SetRelativeLocation(child->viewOffset);
+		equippedWeapon->SetRelativeRotation(child->rotOffset);
+	}
 }
 
 // Called every frame

@@ -60,5 +60,7 @@ public:
 
 	ABaseWeapon& SetBase(UStaticMeshComponent* base);
 	ABaseWeapon& SetView(UCameraComponent* camera);
-	FVector viewOffset = {};
+	
+	FVector viewOffset;
+	FRotator rotOffset;
 };
