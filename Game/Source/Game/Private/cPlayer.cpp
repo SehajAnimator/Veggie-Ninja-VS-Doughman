@@ -14,6 +14,7 @@
 
 #include "cPlayer.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/Engine.h"
 #include "Weapons/KukriKnife.h"
@@ -43,21 +44,13 @@ AcPlayer::AcPlayer()
 	playerBase->BodyInstance.bLockXRotation = true;
 	playerBase->BodyInstance.bLockYRotation = true;
 	
-	bottomCollider = CreateDefaultSubobject<UStaticMeshComponent>("BottomCollider");
-	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset (TEXT("/Engine/BasicShapes/Cube.Cube"));
-	if (CubeMeshAsset.Succeeded())
-	{
-		// playerBase->SetStaticMesh(CubeMeshAsset.Object);
-		bottomCollider->SetStaticMesh(CubeMeshAsset.Object);
-	}
-	
+	bottomCollider = CreateDefaultSubobject<USphereComponent>("BottomCollider");
+	bottomCollider->InitSphereRadius(50);	
 	bottomCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	bottomCollider->SetCollisionProfileName(TEXT("NoCollision"));
+	bottomCollider->SetCollisionProfileName(TEXT("OverlapAll"));
 	bottomCollider->SetupAttachment(playerBase);
 	bottomCollider->SetVisibility(true);
-	bottomCollider->SetRelativeLocation(FVector(0, 0, -46));
-	bottomCollider->SetRelativeScale3D(FVector(1, 1, 0.1f));
+	bottomCollider->SetRelativeLocation(FVector(0, 0, -125));
 
     playerCamera = CreateDefaultSubobject<UCameraComponent>("DefaultCamera");
 	playerCamera->SetupAttachment(playerBase);
@@ -139,7 +132,7 @@ void AcPlayer::CheckMovement()
 	if (playerController->IsInputKeyDown(EKeys::A)) goLeft = true;
 	if (playerController->IsInputKeyDown(EKeys::S)) goBackward = true;
 	if (playerController->IsInputKeyDown(EKeys::D)) goRight = true;
-	if (playerController->IsInputKeyDown(EKeys::SpaceBar) && isGrounded(bottomCollider)) canJump = true;
+	if (playerController->IsInputKeyDown(EKeys::SpaceBar) && isGrounded()) canJump = true;
 }
 
 void AcPlayer::UpdateMovement()
@@ -156,12 +149,6 @@ void AcPlayer::UpdateMovement()
 	}
 	
 	// Add Movement
-	/*
-	if (goForward) playerBase->AddForce(playerBase->GetForwardVector() * this->playerAttributes.moveSpeed, NAME_None, true);
-	if (goLeft) playerBase->AddForce(playerBase->GetRightVector() * -this->playerAttributes.moveSpeed, NAME_None, true);
-	if (goBackward) playerBase->AddForce(playerBase->GetForwardVector() * -this->playerAttributes.moveSpeed, NAME_None, true);
-	if (goRight) playerBase->AddForce(playerBase->GetRightVector() * this->playerAttributes.moveSpeed, NAME_None, true);
-	*/
 	FVector playerVelocity = playerBase->GetPhysicsLinearVelocity();
 	if (goForward) playerVelocity += (playerBase->GetForwardVector() * this->playerAttributes.moveSpeed);
 	if (goLeft) playerVelocity += (playerBase->GetRightVector() * -this->playerAttributes.moveSpeed);
@@ -187,16 +174,25 @@ float AcPlayer::GetSensitivity() const
 	return this->cameraSensitivity;
 }
 
-bool AcPlayer::isGrounded(USceneComponent* comp)
+bool AcPlayer::isGrounded()
 {
-	FVector loc = comp->GetComponentLocation();
-	FVector endLoc = loc;
-	endLoc.Z -= 5;
+	// FVector loc = comp->GetComponentLocation();
+	// FVector endLoc = loc;
+	// endLoc.Z -= 5;
+	//
+	// TArray<FHitResult> hitResults;
+	// GetWorld()->LineTraceMultiByChannel(hitResults ,loc, endLoc, ECC_Visibility);
+	//
+	// return hitResults.Num() > 0;
 	
-	TArray<FHitResult> hitResults;
-	GetWorld()->LineTraceMultiByChannel(hitResults ,loc, endLoc, ECC_Visibility);
-	
-	return hitResults.Num() > 0;
+	TArray<UPrimitiveComponent*> comp;
+	bottomCollider->GetOverlappingComponents(comp);
+		
+	for (UPrimitiveComponent* compi : comp)
+	{
+		if (!compi->IsA(UCapsuleComponent::StaticClass())) return true;
+	}
+	return false;
 }
 
 UCapsuleComponent* AcPlayer::GetBase() const
